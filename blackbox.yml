@@ -47,3 +47,9 @@ modules:
     timeout: 5s
     icmp:
       ttl: 5
+  json:
+    prober: httpjson
+    httpjson:
+      method: GET
+      headers:
+        Content-Type:  "application/json"

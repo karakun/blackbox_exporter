@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"math"
 	"net/textproto"
+	"net/url"
 	"os"
 	"regexp"
 	"runtime"
@@ -192,13 +193,15 @@ func MustNewRegexp(s string) Regexp {
 }
 
 type Module struct {
-	Prober  string        `yaml:"prober,omitempty"`
-	Timeout time.Duration `yaml:"timeout,omitempty"`
-	HTTP    HTTPProbe     `yaml:"http,omitempty"`
-	TCP     TCPProbe      `yaml:"tcp,omitempty"`
-	ICMP    ICMPProbe     `yaml:"icmp,omitempty"`
-	DNS     DNSProbe      `yaml:"dns,omitempty"`
-	GRPC    GRPCProbe     `yaml:"grpc,omitempty"`
+	Prober   string        `yaml:"prober,omitempty"`
+	Timeout  time.Duration `yaml:"timeout,omitempty"`
+	HTTP     HTTPProbe     `yaml:"http,omitempty"`
+	HTTPJSON HTTPJSONProbe `yaml:"httpjson,omitempty"`
+	TCP      TCPProbe      `yaml:"tcp,omitempty"`
+	ICMP     ICMPProbe     `yaml:"icmp,omitempty"`
+	DNS      DNSProbe      `yaml:"dns,omitempty"`
+	GRPC     GRPCProbe     `yaml:"grpc,omitempty"`
+	Params   url.Values
 }
 
 type HTTPProbe struct {
@@ -221,6 +224,15 @@ type HTTPProbe struct {
 	HTTPClientConfig             config.HTTPClientConfig `yaml:"http_client_config,inline"`
 	Compression                  string                  `yaml:"compression,omitempty"`
 	BodySizeLimit                units.Base2Bytes        `yaml:"body_size_limit,omitempty"`
+}
+
+type HTTPJSONProbe struct {
+	NoFollowRedirects *bool                   `yaml:"no_follow_redirects,omitempty"`
+	UserPrefix        string                  `yaml:"userPrefix,omitempty"`
+	Method            string                  `yaml:"method,omitempty"`
+	Headers           map[string]string       `yaml:"headers,omitempty"`
+	Body              string                  `yaml:"body,omitempty"`
+	HTTPClientConfig  config.HTTPClientConfig `yaml:"http_client_config,inline"`
 }
 
 type GRPCProbe struct {

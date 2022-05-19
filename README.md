@@ -35,6 +35,26 @@ will return metrics for a HTTP probe against google.com. The `probe_success`
 metric indicates if the probe succeeded. Adding a `debug=true` parameter
 will return debug information for that probe.
 
+### JSON conversion
+
+The `httpjson` prober reads JSON from the given target url and flattens the paths and values into Prometheus metric format.
+```json
+{
+  "parentA" : 1,
+  "parentB" : [1, 2],
+  "parentC" : "foo"
+}
+``` 
+
+becomes
+```
+probe_httpjson_<prefix>_parentA 1
+probe_httpjson_<prefix>_parentB{index_parentB = "0"} 1
+probe_httpjson_<prefix>_parentB{index_parentB = "1"} 2
+probe_httpjson_<prefix>_parentC{parentC = "foo"} 1
+```
+
+
 ### TLS and basic authentication
 
 The Blackbox Exporter supports TLS and basic authentication. This enables better
@@ -73,7 +93,7 @@ To specify which [configuration file](CONFIGURATION.md) to load, use the `--conf
 
 Additionally, an [example configuration](example.yml) is also available.
 
-HTTP, HTTPS (via the `http` prober), DNS, TCP socket, ICMP and gRPC (see permissions section) are currently supported.
+HTTP, HTTPS (via the `http` prober), JSON, DNS, TCP socket, ICMP and gRPC (see permissions section) are currently supported.
 Additional modules can be defined to meet your needs.
 
 The timeout of each probe is automatically determined from the `scrape_timeout` in the [Prometheus config](https://prometheus.io/docs/operating/configuration/#configuration-file), slightly reduced to allow for network delays. 

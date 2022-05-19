@@ -37,6 +37,7 @@ modules:
 
   # The specific probe configuration - at most one of these should be specified.
   [ http: <http_probe> ]
+  [ httpjson: <httpjson_probe> ]
   [ tcp: <tcp_probe> ]
   [ dns: <dns_probe> ]
   [ icmp: <icmp_probe> ]
@@ -154,7 +155,52 @@ regexp: <regex>,
 [ allow_missing: <boolean> | default = false ]
 ```
 
-### `<tcp_probe>`
+### `<httpjson_probe>
+```yml
+
+  # The HTTP method the probe will use.
+  [ method: <string> | default = "GET" ]
+
+  # The HTTP headers set for the probe.
+  headers:
+    [ <string>: <string> ... ]
+
+  # Whether or not the probe will follow any redirects.
+  [ follow_redirects: <boolean> | default = true ]
+
+  # Configuration for TLS protocol of HTTP probe.
+  tls_config:
+    [ <tls_config> ]
+
+  # The HTTP basic authentication credentials for the targets.
+  basic_auth:
+    [ username: <string> ]
+    [ password: <secret> ]
+    [ password_file: <filename> ]
+
+  # The bearer token for the targets.
+  [ bearer_token: <secret> ]
+
+  # The bearer token file for the targets.
+  [ bearer_token_file: <filename> ]
+
+  # HTTP proxy server to use to connect to the targets.
+  [ proxy_url: <string> ]
+
+  # OAuth 2.0 configuration to use to connect to the targets.
+  oauth2:
+      [ <oauth2> ]
+
+  # Whether to enable HTTP2.
+  [ enable_http2: <bool> | default: true ]
+
+  # The body of the HTTP request used in probe.
+  body: [ <string> ]
+
+
+```
+
+### <tcp_probe>`
 
 ```yml
 

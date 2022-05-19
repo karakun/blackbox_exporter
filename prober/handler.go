@@ -34,11 +34,12 @@ import (
 
 var (
 	Probers = map[string]ProbeFn{
-		"http": ProbeHTTP,
-		"tcp":  ProbeTCP,
-		"icmp": ProbeICMP,
-		"dns":  ProbeDNS,
-		"grpc": ProbeGRPC,
+		"http":     ProbeHTTP,
+		"tcp":      ProbeTCP,
+		"icmp":     ProbeICMP,
+		"dns":      ProbeDNS,
+		"grpc":     ProbeGRPC,
+		"httpjson": ProbeHTTPJSON,
 	}
 	moduleUnknownCounter = prometheus.NewCounter(prometheus.CounterOpts{
 		Name: "blackbox_module_unknown_total",
@@ -120,6 +121,7 @@ func Handler(w http.ResponseWriter, r *http.Request, c *config.Config, logger lo
 	registry := prometheus.NewRegistry()
 	registry.MustRegister(probeSuccessGauge)
 	registry.MustRegister(probeDurationGauge)
+	module.Params = r.URL.Query()
 	success := prober(ctx, target, module, registry, sl)
 	duration := time.Since(start).Seconds()
 	probeDurationGauge.Set(duration)
